@@ -54,9 +54,8 @@ src/
 ├── lib/                 # Utilitários e lógica de negócio
 │   ├── utils.ts         # Função cn() para classes Tailwind
 │   ├── indexedDB.ts     # Persistência local
-│   ├── smartTemplates.ts # Templates de upload por página
-│   ├── columnMapping.ts # Lógica de mapeamento de colunas
-│   └── templates.ts     # Definições de campos esperados
+│   ├── smartTemplates.ts # Templates de upload por página (ÚNICO arquivo de templates)
+│   └── columnMapping.ts # Lógica de mapeamento de colunas
 ├── pages/               # Páginas/rotas do dashboard
 │   ├── Index.tsx        # Redirecionamento inicial
 │   ├── Login.tsx        # Seleção de role (sem senha)

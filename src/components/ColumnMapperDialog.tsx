@@ -19,7 +19,10 @@ import {
 } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { ColumnMapping, MappingResult } from '@/lib/columnMapping';
-import { TemplateColumn } from '@/lib/templates';
+import { SmartColumn } from '@/lib/smartTemplates';
+
+// Type alias for backward compatibility
+type TemplateColumn = SmartColumn;
 
 interface ColumnMapperDialogProps {
   isOpen: boolean;
