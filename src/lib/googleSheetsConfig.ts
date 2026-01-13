@@ -14,7 +14,7 @@ export const getGoogleSheetId = (pageId: string): string | null => {
   if (stored && stored.length > 0) {
     return stored;
   }
-  
+
   // Prioridade 2: variáveis de ambiente
   const env = import.meta.env as Record<string, string | undefined>;
   const envKey = `VITE_GOOGLE_SHEETS_${pageId.toUpperCase()}_ID`;
@@ -32,7 +32,7 @@ export const getGoogleSheetsApiKey = (): string | null => {
   if (stored && stored.length > 0) {
     return stored;
   }
-  
+
   // Prioridade 2: variáveis de ambiente
   const env = import.meta.env as Record<string, string | undefined>;
   const apiKey = env.VITE_GOOGLE_SHEETS_API_KEY;
@@ -66,7 +66,8 @@ export const getSheetNameMapping = (pageId: string): Record<string, string> => {
  * @returns true se tem Sheet ID e API Key configurados
  */
 export const hasGoogleSheetsConfig = (pageId: string): boolean => {
-  return getGoogleSheetId(pageId) !== null && getGoogleSheetsApiKey() !== null;
+  // Agora suportamos acesso público sem API Key, então só precisamos do Sheet ID
+  return getGoogleSheetId(pageId) !== null;
 };
 
 /**
