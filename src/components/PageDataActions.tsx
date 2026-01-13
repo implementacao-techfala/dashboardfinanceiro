@@ -1,9 +1,7 @@
 import React from "react";
-import { Trash2, FileSpreadsheet, Link2, RefreshCw, Loader2 } from "lucide-react";
+import { Trash2, RefreshCw, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import DataUploader from "@/components/DataUploader";
 import { Button } from "@/components/ui/button";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -95,155 +93,79 @@ export default function PageDataActions({ pageId, onDataUpdated }: Props) {
     }
   };
 
+  // Simplificado para Opção A: Apenas Google Sheets
+
   return (
     <div className="flex items-center gap-3 flex-wrap">
-      {/* Toggle: Fonte de dados (só aparece se tiver config Google) */}
-      {hasGoogleConfig && (
-        <ToggleGroup
-          type="single"
-          value={currentSource}
-          onValueChange={handleSourceChange}
-          className="border rounded-md"
-        >
-          <ToggleGroupItem
-            value="file"
-            aria-label="Arquivo local"
-            disabled={isSyncing[pageId]}
-          >
-            <FileSpreadsheet className="h-4 w-4 mr-1" />
-            Arquivo
-          </ToggleGroupItem>
-          <ToggleGroupItem
-            value="googlesheets"
-            aria-label="Google Sheets"
-            disabled={isSyncing[pageId]}
-          >
-            <Link2 className="h-4 w-4 mr-1" />
-            Google Sheets
-          </ToggleGroupItem>
-        </ToggleGroup>
+      {/* Botões de Ação (Sempre Google Sheets agora) */}
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={handleSync}
+        disabled={isSyncing[pageId]}
+        className="gap-2"
+      >
+        {isSyncing[pageId] ? (
+          <>
+            <Loader2 className="h-4 w-4 animate-spin" />
+            Sincronizando...
+          </>
+        ) : (
+          <>
+            <RefreshCw className="h-4 w-4" />
+            Sincronizar Dados
+          </>
+        )}
+      </Button>
+
+      {uploadInfo && (
+        <div className="text-xs text-muted-foreground hidden sm:block">
+          Última sync: {formatDate(uploadInfo.uploadedAt)}
+        </div>
       )}
 
-      {/* Botões condicionais baseados na fonte */}
-      {currentSource === 'file' ? (
-        <>
-          <DataUploader pageId={pageId} onDataUpdated={onDataUpdated} />
+      {uploadInfo && missingSheets.length > 0 ? (
+        <div className="text-xs text-warning">
+          Faltam abas: {missingSheets.join(", ")}
+        </div>
+      ) : null}
 
-          {uploadInfo && missingSheets.length > 0 ? (
-            <div className="text-xs text-warning">
-              Faltam abas: {missingSheets.join(", ")}
-            </div>
-          ) : null}
-
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button
-                variant="outline"
-                size="sm"
-                className="gap-2 text-destructive border-destructive/50 hover:bg-destructive/10"
-                disabled={!uploadInfo}
-                title={!uploadInfo ? "Sem dados para remover" : "Remover dados desta página"}
-              >
-                <Trash2 className="h-4 w-4" />
-                Remover Dados
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Confirmar remoção</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Isso vai remover os dados salvos desta página ({pageId}) do seu navegador (IndexedDB). Os gráficos ficarão vazios.
-                  {uploadInfo ? (
-                    <span className="block mt-2 text-sm text-muted-foreground">
-                      Arquivo atual: {uploadInfo.fileName}
-                    </span>
-                  ) : null}
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={handleClear}
-                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                >
-                  Remover
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </>
-      ) : (
-        <>
+      <AlertDialog>
+        <AlertDialogTrigger asChild>
           <Button
-            variant="outline"
+            variant="ghost"
             size="sm"
-            onClick={handleSync}
-            disabled={isSyncing[pageId]}
-            className="gap-2"
+            className="gap-2 text-destructive hover:bg-destructive/10"
+            disabled={!uploadInfo || isSyncing[pageId]}
+            title={!uploadInfo ? "Sem dados para remover" : "Limpar cache local"}
           >
-            {isSyncing[pageId] ? (
-              <>
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Sincronizando...
-              </>
-            ) : (
-              <>
-                <RefreshCw className="h-4 w-4" />
-                Sincronizar
-              </>
-            )}
+            <Trash2 className="h-4 w-4" />
           </Button>
-
-          {uploadInfo && (
-            <div className="text-xs text-muted-foreground">
-              Última sync: {formatDate(uploadInfo.uploadedAt)}
-            </div>
-          )}
-
-          {uploadInfo && missingSheets.length > 0 ? (
-            <div className="text-xs text-warning">
-              Faltam abas: {missingSheets.join(", ")}
-            </div>
-          ) : null}
-
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button
-                variant="outline"
-                size="sm"
-                className="gap-2 text-destructive border-destructive/50 hover:bg-destructive/10"
-                disabled={!uploadInfo || isSyncing[pageId]}
-                title={!uploadInfo ? "Sem dados para remover" : "Remover dados desta página"}
-              >
-                <Trash2 className="h-4 w-4" />
-                Remover Dados
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Confirmar remoção</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Isso vai remover os dados em cache do Google Sheets desta página ({pageId}) do seu navegador (IndexedDB). Os gráficos ficarão vazios. Você pode sincronizar novamente depois.
-                  {uploadInfo ? (
-                    <span className="block mt-2 text-sm text-muted-foreground">
-                      Fonte: Google Sheets • Última sync: {formatDate(uploadInfo.uploadedAt)}
-                    </span>
-                  ) : null}
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={handleClear}
-                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                >
-                  Remover
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </>
-      )}
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Limpar cache local?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Isso remove os dados salvos neste computador. Para ver os dados novamente, basta clicar em Sincronizar.
+              Os dados na planilha do Google não serão afetados.
+              {uploadInfo ? (
+                <span className="block mt-2 text-sm text-muted-foreground">
+                  Última cópia: {formatDate(uploadInfo.uploadedAt)}
+                </span>
+              ) : null}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleClear}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Limpar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
