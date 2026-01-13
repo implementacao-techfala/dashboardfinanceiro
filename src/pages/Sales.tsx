@@ -3,7 +3,7 @@ import { ExpandableChart } from "@/components/ExpandableChart";
 import { FilterBadges } from "@/components/FilterBadges";
 import { CustomTooltip } from "@/components/CustomTooltip";
 import { AccountSelector } from "@/components/AccountSelector";
-import DataUploader from "@/components/DataUploader";
+import PageDataActions from "@/components/PageDataActions";
 import { useData } from "@/contexts/DataContext";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, Legend } from "recharts";
 import { toast } from "sonner";
@@ -75,13 +75,7 @@ export default function Sales() {
       pipeline: data.pipeline
     }));
 
-    return result.length > 0 ? result : [
-      { vendedor: "Carlos Silva", oportunidadesConvertidas: 28, metaVendas: 25, conversao: 18.5, ticket: 3200, ligacoes: 145, whatsapp: 89, contatosNecessarios: 8.3, pipeline: 42 },
-      { vendedor: "Ana Santos", oportunidadesConvertidas: 32, metaVendas: 30, conversao: 21.2, ticket: 3800, ligacoes: 134, whatsapp: 112, contatosNecessarios: 7.7, pipeline: 38 },
-      { vendedor: "Pedro Costa", oportunidadesConvertidas: 24, metaVendas: 25, conversao: 16.8, ticket: 2900, ligacoes: 167, whatsapp: 78, contatosNecessarios: 10.2, pipeline: 51 },
-      { vendedor: "Mariana Lima", oportunidadesConvertidas: 35, metaVendas: 30, conversao: 23.4, ticket: 4100, ligacoes: 112, whatsapp: 98, contatosNecessarios: 6.0, pipeline: 35 },
-      { vendedor: "João Oliveira", oportunidadesConvertidas: 29, metaVendas: 25, conversao: 19.3, ticket: 3400, ligacoes: 156, whatsapp: 67, contatosNecessarios: 7.7, pipeline: 45 },
-    ];
+    return result;
   }, [oportunidadesRaw, atividadesRaw, metasRaw, refreshKey]);
 
   // Processar pipeline por estágio
@@ -105,13 +99,7 @@ export default function Sales() {
         valor: data.valor
       }));
 
-    return result.length > 0 ? result : [
-      { estagio: "Prospecção", quantidade: 245, valor: 784000 },
-      { estagio: "Qualificação", quantidade: 142, valor: 512000 },
-      { estagio: "Proposta", quantidade: 89, valor: 356000 },
-      { estagio: "Negociação", quantidade: 54, valor: 248000 },
-      { estagio: "Fechamento", quantidade: 28, valor: 134000 },
-    ];
+    return result;
   }, [oportunidadesRaw, refreshKey]);
 
   // Calcular metas do time por mês
@@ -120,7 +108,7 @@ export default function Sales() {
     return months.map((month, i) => ({
       month,
       meta: 120 + (i * 5),
-      realizado: 118 + Math.floor(Math.random() * 20)
+      realizado: 0
     }));
   }, []);
 
@@ -151,7 +139,7 @@ export default function Sales() {
           <p className="text-muted-foreground">Performance individual e oportunidades convertidas do time comercial</p>
         </div>
         <div className="flex items-center gap-3">
-          <DataUploader pageId="sales" onDataUpdated={() => setRefreshKey(k => k + 1)} />
+          <PageDataActions pageId="sales" onDataUpdated={() => setRefreshKey(k => k + 1)} />
           <AccountSelector />
         </div>
       </div>

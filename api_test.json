@@ -1,0 +1,25 @@
+{
+  "error": {
+    "code": 403,
+    "message": "Requests to this API sheets.googleapis.com method google.apps.sheets.v4.SpreadsheetsService.GetSpreadsheet are blocked.",
+    "status": "PERMISSION_DENIED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "API_KEY_SERVICE_BLOCKED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "service": "sheets.googleapis.com",
+          "methodName": "google.apps.sheets.v4.SpreadsheetsService.GetSpreadsheet",
+          "consumer": "projects/14655270012",
+          "apiName": "sheets.googleapis.com"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.LocalizedMessage",
+        "locale": "en-US",
+        "message": "Requests to this API sheets.googleapis.com method google.apps.sheets.v4.SpreadsheetsService.GetSpreadsheet are blocked."
+      }
+    ]
+  }
+}

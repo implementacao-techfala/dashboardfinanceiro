@@ -59,6 +59,36 @@ This project is built with:
 - React
 - shadcn-ui
 - Tailwind CSS
+- Google Sheets API (opcional)
+
+## Configuração do Google Sheets
+
+Para habilitar a integração com Google Sheets:
+
+1. **Crie um arquivo `.env.local`** na raiz do projeto (copie de `.env.example`)
+
+2. **Obtenha uma API Key do Google:**
+   - Acesse [Google Cloud Console](https://console.cloud.google.com/)
+   - Crie um projeto ou selecione um existente
+   - Ative a API "Google Sheets API"
+   - Crie uma credencial do tipo "API Key"
+   - Copie a chave e cole em `VITE_GOOGLE_SHEETS_API_KEY`
+
+3. **Configure os Sheet IDs:**
+   - Para cada página que você quer conectar ao Google Sheets, obtenha o ID da planilha
+   - O ID está na URL: `https://docs.google.com/spreadsheets/d/{SHEET_ID}/edit`
+   - Configure as variáveis: `VITE_GOOGLE_SHEETS_{PAGE}_ID`
+
+4. **Permissões da Planilha:**
+   - Se usar API Key pública: a planilha precisa ser **pública** (qualquer pessoa com o link pode ver)
+   - Se usar Service Account: compartilhe a planilha com o email da service account
+
+5. **Uso no Dashboard:**
+   - Quando uma página tem Google Sheets configurado, aparece um toggle "Arquivo" ↔ "Google Sheets"
+   - Selecione "Google Sheets" e clique em "Sincronizar" para buscar dados
+   - Os dados são atualizados em tempo real do Google Sheets
+
+**Nota:** Para produção com planilhas privadas, recomenda-se usar um proxy backend ao invés de expor a API Key no frontend.
 
 ## How can I deploy this project?
 

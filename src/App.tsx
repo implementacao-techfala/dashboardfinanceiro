@@ -18,6 +18,7 @@ import Cashflow from "./pages/Cashflow";
 import HR from "./pages/HR";
 import TVPresentation from "./pages/TVPresentation";
 import Login from "./pages/Login";
+import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -50,6 +51,7 @@ const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/login" element={user ? <Navigate to="/" replace /> : <Login />} />
+      <Route path="/admin" element={<Admin />} />
       <Route path="/tv" element={
         <ProtectedRoute page="tv">
           <TVPresentation />
@@ -87,7 +89,7 @@ const App = () => {
             <FilterProvider>
               <Toaster />
               <Sonner />
-              <BrowserRouter>
+              <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
                 <AppRoutes />
               </BrowserRouter>
             </FilterProvider>

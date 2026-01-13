@@ -53,6 +53,8 @@ const SmartUploadModal: React.FC<SmartUploadModalProps> = ({
   const [confirmedMappings, setConfirmedMappings] = useState<Record<string, { sourceColumn: string; targetKey: string }[]>>({});
 
   const template = smartTemplates[pageId];
+  const requiredSheets = template?.sheets?.map(s => s.name) || [];
+  const requiresMultiSheets = requiredSheets.length > 1;
 
   const handleDownloadTemplate = () => {
     try {
@@ -75,6 +77,15 @@ const SmartUploadModal: React.FC<SmartUploadModalProps> = ({
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
     if (!file) return;
+
+    // CSV em template multi-guia vira confuso; exigimos XLSX/XLS para manter CRUD simples.
+    if (requiresMultiSheets && file.name.toLowerCase().endsWith('.csv')) {
+      toast.error(
+        `Para "${template?.name || pageId}", envie um arquivo .xlsx/.xls com as abas: ${requiredSheets.join(", ")}.`,
+        { duration: 8000 }
+      );
+      return;
+    }
 
     setIsAnalyzing(true);
     setUploadedFile(file);
@@ -128,11 +139,16 @@ const SmartUploadModal: React.FC<SmartUploadModalProps> = ({
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ 
     onDrop, 
-    accept: { 
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ['.xlsx'],
-      'application/vnd.ms-excel': ['.xls'],
-      'text/csv': ['.csv'] 
-    },
+    accept: requiresMultiSheets
+      ? {
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ['.xlsx'],
+          'application/vnd.ms-excel': ['.xls'],
+        }
+      : {
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ['.xlsx'],
+          'application/vnd.ms-excel': ['.xls'],
+          'text/csv': ['.csv'],
+        },
     maxFiles: 1,
     disabled: isAnalyzing
   });
@@ -352,6 +368,25 @@ const SmartUploadModal: React.FC<SmartUploadModalProps> = ({
           {/* Step 1: Template Info */}
           {step === 'template' && (
             <div className="space-y-5 animate-in fade-in duration-300">
+              <div className="rounded-lg border border-border bg-muted/30 p-3 text-sm text-muted-foreground">
+                {requiresMultiSheets ? (
+                  <div className="space-y-1">
+                    <div className="font-medium text-foreground">Atenção: este dashboard usa múltiplas abas</div>
+                    <div>
+                      Para preencher corretamente os gráficos, envie um arquivo <strong>.xlsx/.xls</strong> contendo todas as abas:
+                      <strong> {requiredSheets.join(", ")}</strong>.
+                    </div>
+                    <div className="text-xs">
+                      CSV não suporta abas, então aqui ele não é aceito (pra evitar importações parciais).
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    Você pode enviar <strong>.xlsx/.xls</strong> (recomendado) ou <strong>.csv</strong> (1 aba).
+                  </div>
+                )}
+              </div>
+
               {/* Sheets Preview - Compact */}
               <div className="space-y-3 max-h-[280px] overflow-y-auto">
                 {template.sheets.map((sheet, idx) => (
@@ -460,7 +495,7 @@ const SmartUploadModal: React.FC<SmartUploadModalProps> = ({
                       : "Arraste sua planilha"}
                 </p>
                 <p className="text-xs text-muted-foreground mt-1">
-                  .xlsx, .xls ou .csv
+                  {requiresMultiSheets ? ".xlsx ou .xls" : ".xlsx, .xls ou .csv"}
                 </p>
               </div>
 
@@ -695,7 +730,18 @@ const SmartUploadModal: React.FC<SmartUploadModalProps> = ({
                         <FileSpreadsheet className="w-3.5 h-3.5" />
                         {sheet.name}
                       </span>
-                      <span className="text-foreground">{sheet.rows} linhas</span>
+                      <span className="flex items-center gap-2">
+                        <span className="text-foreground">{sheet.rows} linhas</span>
+                        {sheet.mappingAnalysis?.needsReview ? (
+                          <span className="text-xs px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-400">
+                            revisão
+                          </span>
+                        ) : (
+                          <span className="text-xs px-2 py-0.5 rounded bg-green-500/10 border border-green-500/20 text-green-600 dark:text-green-400">
+                            auto
+                          </span>
+                        )}
+                      </span>
                     </div>
                   ))}
                 </div>

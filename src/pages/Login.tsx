@@ -10,14 +10,46 @@ import logoGrupoFN from "@/assets/logo-grupofn.png";
 import { Lock, User, LogIn } from "lucide-react";
 import { toast } from "sonner";
 
-// Credenciais simuladas por departamento
+// Credenciais simuladas por departamento.
+// Para trocar sem alterar código: use .env.local com:
+// VITE_LOGIN_PASSWORD_MASTER=...
+// VITE_LOGIN_PASSWORD_COMERCIAL=...
+// VITE_LOGIN_PASSWORD_MARKETING=...
+// VITE_LOGIN_PASSWORD_FINANCEIRO=...
+// VITE_LOGIN_PASSWORD_RH=...
+// VITE_LOGIN_PASSWORD_SUPORTE=...
+const defaultPasswords: Record<UserRole, string> = {
+  master: "master123",
+  comercial: "comercial123",
+  marketing: "marketing123",
+  financeiro: "financeiro123",
+  rh: "rh123",
+  suporte: "suporte123",
+};
+
+const roleEnvKey: Record<UserRole, string> = {
+  master: "VITE_LOGIN_PASSWORD_MASTER",
+  comercial: "VITE_LOGIN_PASSWORD_COMERCIAL",
+  marketing: "VITE_LOGIN_PASSWORD_MARKETING",
+  financeiro: "VITE_LOGIN_PASSWORD_FINANCEIRO",
+  rh: "VITE_LOGIN_PASSWORD_RH",
+  suporte: "VITE_LOGIN_PASSWORD_SUPORTE",
+};
+
+function getPasswordForRole(role: UserRole): string {
+  // @ts-expect-error - import.meta.env é injetado pelo Vite
+  const env = (import.meta?.env || {}) as Record<string, string | boolean | undefined>;
+  const v = env[roleEnvKey[role]];
+  return typeof v === "string" && v.length > 0 ? v : defaultPasswords[role];
+}
+
 const credentials: Record<string, { password: string; role: UserRole }> = {
-  master: { password: "master123", role: "master" },
-  comercial: { password: "comercial123", role: "comercial" },
-  marketing: { password: "marketing123", role: "marketing" },
-  financeiro: { password: "financeiro123", role: "financeiro" },
-  rh: { password: "rh123", role: "rh" },
-  suporte: { password: "suporte123", role: "suporte" },
+  master: { password: getPasswordForRole("master"), role: "master" },
+  comercial: { password: getPasswordForRole("comercial"), role: "comercial" },
+  marketing: { password: getPasswordForRole("marketing"), role: "marketing" },
+  financeiro: { password: getPasswordForRole("financeiro"), role: "financeiro" },
+  rh: { password: getPasswordForRole("rh"), role: "rh" },
+  suporte: { password: getPasswordForRole("suporte"), role: "suporte" },
 };
 
 const departmentLabels: Record<string, string> = {

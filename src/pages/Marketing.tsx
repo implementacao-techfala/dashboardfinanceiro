@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { ExpandableChart } from "@/components/ExpandableChart";
 import { FilterBadges } from "@/components/FilterBadges";
 import { CustomTooltip } from "@/components/CustomTooltip";
-import DataUploader from "@/components/DataUploader";
+import PageDataActions from "@/components/PageDataActions";
 import { useFilters } from "@/contexts/FilterContext";
 import { useData } from "@/contexts/DataContext";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, Legend, Cell } from "recharts";
@@ -43,13 +43,7 @@ export default function Marketing() {
       roi: data.investimento > 0 ? Math.round(((data.receita - data.investimento) / data.investimento) * 100) : 0
     }));
 
-    return result.length > 0 ? result : [
-      { canal: "Google Ads", investimento: 45000, leads: 1250, conversao: 12.5, roi: 280 },
-      { canal: "Facebook Ads", investimento: 32000, leads: 980, conversao: 9.8, roi: 195 },
-      { canal: "Instagram Ads", investimento: 28000, leads: 850, conversao: 11.2, roi: 220 },
-      { canal: "LinkedIn Ads", investimento: 18000, leads: 420, conversao: 15.8, roi: 310 },
-      { canal: "Orgânico (SEO)", investimento: 8000, leads: 620, conversao: 18.5, roi: 580 },
-    ];
+    return result;
   }, [campanhasRaw, refreshKey]);
 
   // Processar ROI mensal
@@ -75,14 +69,7 @@ export default function Marketing() {
       roi: data.investimento > 0 ? Math.round(((data.receita - data.investimento) / data.investimento) * 100) : 0
     }));
 
-    return result.length > 0 ? result : [
-      { month: "Jan", investimento: 95000, receita: 245000, roi: 158 },
-      { month: "Fev", investimento: 102000, receita: 278000, roi: 172 },
-      { month: "Mar", investimento: 98000, receita: 256000, roi: 161 },
-      { month: "Abr", investimento: 115000, receita: 321000, roi: 179 },
-      { month: "Mai", investimento: 108000, receita: 298000, roi: 176 },
-      { month: "Jun", investimento: 131000, receita: 368000, roi: 181 },
-    ];
+    return result;
   }, [campanhasRaw, refreshKey]);
 
   // Processar funil de leads
@@ -104,15 +91,7 @@ export default function Marketing() {
 
     const total = Object.values(statusCount).reduce((a, b) => a + b, 0);
     
-    if (total === 0) {
-      return [
-        { etapa: "Visitantes", valor: 15420, taxa: 100 },
-        { etapa: "Leads", valor: 4120, taxa: 26.7 },
-        { etapa: "MQLs", valor: 1856, taxa: 45.0 },
-        { etapa: "SQLs", valor: 834, taxa: 44.9 },
-        { etapa: "Clientes", valor: 125, taxa: 15.0 },
-      ];
-    }
+    if (total === 0) return [];
 
     return [
       { etapa: "Novos Leads", valor: statusCount['Novo'], taxa: 100 },
@@ -143,7 +122,7 @@ export default function Marketing() {
           <h1 className="text-4xl font-bold text-foreground mb-2">Marketing & ROI</h1>
           <p className="text-muted-foreground">Análise de investimento, conversão e retorno</p>
         </div>
-        <DataUploader pageId="marketing" onDataUpdated={() => setRefreshKey(k => k + 1)} />
+        <PageDataActions pageId="marketing" onDataUpdated={() => setRefreshKey(k => k + 1)} />
       </div>
 
       <FilterBadges />

@@ -1,0 +1,101 @@
+nome,departamento,cargo,data_admissao,salario_bruto,encargos,beneficios,tipo_contrato,gestor
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,4889,1815,1135,CLT,Maria Santos
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,8873,3094,1404,CLT,N/A
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,5847,2303,921,CLT,Maria Santos
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,9593,3532,1100,CLT,N/A
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,4005,1462,812,CLT,Maria Santos
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,5477,2046,1059,CLT,Maria Santos
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,5245,1810,818,CLT,Maria Santos
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,8511,3847,1393,CLT,N/A
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,5543,2387,1043,CLT,Maria Santos
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,6777,3530,1272,CLT,N/A
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,6041,3240,938,CLT,N/A
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,7092,3142,1601,CLT,N/A
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,8905,2628,1260,CLT,N/A
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,10459,2678,1011,CLT,N/A
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,10645,3873,986,CLT,N/A
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,5497,2289,1083,CLT,Maria Santos
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,6439,3705,1570,CLT,N/A
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,8765,4110,1449,CLT,N/A
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,8138,3904,1071,CLT,N/A
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,4983,1610,717,CLT,Maria Santos
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,3750,2207,987,CLT,Maria Santos
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,3997,1449,1053,CLT,Maria Santos
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,7918,3233,989,CLT,N/A
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,5646,1629,866,CLT,Maria Santos
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,7750,3783,1113,CLT,N/A
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,5969,2174,663,CLT,Maria Santos
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,6883,2990,1137,CLT,N/A
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,9862,3288,936,CLT,N/A
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,8096,4116,929,CLT,N/A
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,6439,3813,1099,CLT,N/A
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,5697,2102,669,CLT,Maria Santos
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,6863,2858,1431,CLT,N/A
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,4424,2410,1025,CLT,Maria Santos
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,4763,2122,738,CLT,Maria Santos
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,4751,2064,1144,CLT,Maria Santos
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,4412,2299,935,CLT,Maria Santos
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,5883,2377,975,CLT,Maria Santos
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,10797,3064,1049,CLT,N/A
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,8632,2573,956,CLT,N/A
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,10181,3637,1454,CLT,N/A
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,5420,1487,711,CLT,Maria Santos
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,4756,1644,750,CLT,Maria Santos
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,3474,2174,819,CLT,Maria Santos
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,4570,2246,838,CLT,Maria Santos
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,10196,2901,1330,CLT,N/A
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,4776,1571,879,CLT,Maria Santos
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,6057,1798,1031,CLT,Maria Santos
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,8697,3984,1102,CLT,N/A
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,5789,1984,752,CLT,Maria Santos
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,7476,4275,1148,CLT,N/A
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,5284,2211,1142,CLT,Maria Santos
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,9196,2737,1483,CLT,N/A
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,4343,2309,1071,CLT,Maria Santos
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,7408,3573,1011,CLT,N/A
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,3511,2148,738,CLT,Maria Santos
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,8292,3642,1410,CLT,N/A
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,3507,1951,1009,CLT,Maria Santos
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,7605,3136,1615,CLT,N/A
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,5510,1579,1110,CLT,Maria Santos
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,4235,1660,1084,CLT,Maria Santos
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,7426,3665,1167,CLT,N/A
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,3494,2301,904,CLT,Maria Santos
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,5815,1775,1076,CLT,Maria Santos
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,4513,1879,735,CLT,Maria Santos
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,7443,4313,1144,CLT,N/A
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,6492,2526,1473,CLT,N/A
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,5767,2132,967,CLT,Maria Santos
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,4030,1409,806,CLT,Maria Santos
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,8076,2723,951,CLT,N/A
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,8738,3056,945,CLT,N/A
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,6318,4274,1415,CLT,N/A
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,9719,2883,1312,CLT,N/A
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,4877,2034,988,CLT,Maria Santos
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,3916,2011,936,CLT,Maria Santos
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,10412,3000,962,CLT,N/A
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,5694,2303,953,CLT,Maria Santos
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,7612,3889,1483,CLT,N/A
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,9600,3056,1226,CLT,N/A
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,7814,3073,1029,CLT,N/A
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,8387,3059,1188,CLT,N/A
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,4861,2388,823,CLT,Maria Santos
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,7413,3600,1183,CLT,N/A
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,6697,2829,1355,CLT,N/A
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,6796,3723,1541,CLT,N/A
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,7948,3563,1189,CLT,N/A
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,8585,2864,1320,CLT,N/A
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,6035,3639,981,CLT,N/A
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,6609,3731,1564,CLT,N/A
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,5661,1605,1101,CLT,Maria Santos
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,3725,2133,872,CLT,Maria Santos
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,3770,2398,703,CLT,Maria Santos
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,5375,2335,1146,CLT,Maria Santos
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,5724,1944,951,CLT,Maria Santos
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,10655,3204,1290,CLT,N/A
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,4594,1626,1064,CLT,Maria Santos
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,5479,2155,685,CLT,Maria Santos
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,10013,3325,1486,CLT,N/A
+João Silva,Contabilidade,Analista Fiscal,2022-03-15,4803,1939,753,CLT,Maria Santos
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,10000,3031,1524,CLT,N/A
+Maria Santos,Contabilidade,Coordenadora,2021-08-01,9541,3363,1253,CLT,N/A

@@ -5,41 +5,53 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { Card } from "@/components/ui/card";
 import { TrendingUp, TrendingDown, DollarSign } from "lucide-react";
 import { useData } from "@/contexts/DataContext";
-import DataUploader from "@/components/DataUploader";
-
-// Default data for expenses and projections (these could also be separate uploads)
-const defaultCategoriaDespesas = [
-  { categoria: "Pessoal", valor: 195000, percentual: 35.2 },
-  { categoria: "Marketing", valor: 131000, percentual: 23.6 },
-  { categoria: "Operacional", valor: 88500, percentual: 16.0 },
-  { categoria: "Impostos", valor: 90450, percentual: 16.3 },
-  { categoria: "Diversos", valor: 49140, percentual: 8.9 },
-];
-
-const defaultPrevisaoData = [
-  { month: "Jul", previsto: 720000, conservador: 680000 },
-  { month: "Ago", previsto: 750000, conservador: 700000 },
-  { month: "Set", previsto: 780000, conservador: 720000 },
-  { month: "Out", previsto: 810000, conservador: 750000 },
-];
+import PageDataActions from "@/components/PageDataActions";
 
 export default function Cashflow() {
   const { getData } = useData();
   const [refreshKey, setRefreshKey] = useState(0);
   
-  // Get data from context (uploaded or sample)
-  const rawData = getData('cashflow');
-  
-  // Transform data to match expected format
-  const fluxoCaixaData = rawData.map(item => ({
-    month: item.mes || item.month || '',
-    entradas: Number(item.entradas) || 0,
-    saidas: Number(item.saidas) || 0,
-    saldo: item.saldo !== undefined ? Number(item.saldo) : (Number(item.entradas) || 0) - (Number(item.saidas) || 0)
-  }));
+  // Derivar fluxo mensal a partir do template (Movimentacoes)
+  const movimentacoes = getData('cashflow', 'Movimentacoes');
 
-  const categoriaDespesas = defaultCategoriaDespesas;
-  const previsaoData = defaultPrevisaoData;
+  const fluxoCaixaData = (() => {
+    const monthly: Record<string, { entradas: number; saidas: number }> = {};
+    movimentacoes.forEach((m: any) => {
+      const date = new Date(m.data);
+      const monthKey = date.toLocaleDateString('pt-BR', { month: 'short' }).replace('.', '');
+      const month = monthKey.charAt(0).toUpperCase() + monthKey.slice(1);
+      if (!monthly[month]) monthly[month] = { entradas: 0, saidas: 0 };
+      const valor = Number(m.valor) || 0;
+      if (m.tipo === 'Entrada') monthly[month].entradas += valor;
+      if (m.tipo === 'Saída') monthly[month].saidas += valor;
+    });
+    return Object.entries(monthly).map(([month, v]) => ({
+      month,
+      entradas: v.entradas,
+      saidas: v.saidas,
+      saldo: v.entradas - v.saidas,
+    }));
+  })();
+
+  const categoriaDespesas = (() => {
+    const byCat: Record<string, number> = {};
+    movimentacoes.forEach((m: any) => {
+      if (m.tipo !== 'Saída') return;
+      const cat = m.categoria || 'Outros';
+      byCat[cat] = (byCat[cat] || 0) + (Number(m.valor) || 0);
+    });
+    const total = Object.values(byCat).reduce((a, b) => a + b, 0);
+    return Object.entries(byCat)
+      .map(([categoria, valor]) => ({
+        categoria,
+        valor,
+        percentual: total > 0 ? Number(((valor / total) * 100).toFixed(1)) : 0,
+      }))
+      .sort((a, b) => b.valor - a.valor)
+      .slice(0, 8);
+  })();
+
+  const previsaoData: any[] = [];
 
   const saldoAtual = fluxoCaixaData.length > 0 ? fluxoCaixaData[fluxoCaixaData.length - 1].saldo : 0;
   const saldoAnterior = fluxoCaixaData.length > 1 ? fluxoCaixaData[fluxoCaixaData.length - 2].saldo : saldoAtual;
@@ -60,7 +72,7 @@ export default function Cashflow() {
           <h1 className="text-4xl font-bold text-foreground mb-2">Fluxo de Caixa</h1>
           <p className="text-muted-foreground">Acompanhamento de entradas, saídas e projeções</p>
         </div>
-        <DataUploader pageId="cashflow" onDataUpdated={handleDataUpdated} />
+        <PageDataActions pageId="cashflow" onDataUpdated={handleDataUpdated} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">

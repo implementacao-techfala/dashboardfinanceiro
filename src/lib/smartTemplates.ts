@@ -34,25 +34,34 @@ export const smartTemplates: Record<string, SmartTemplate> = {
   overview: {
     id: 'overview',
     name: 'Visão Geral',
-    description: 'Histórico mensal consolidado da empresa',
+    description: 'Dados para KPIs e gráficos de visão executiva',
     sheets: [
       {
-        name: 'Historico_Mensal',
-        description: 'Dados mensais consolidados',
+        name: 'MRR',
+        description: 'Evolução do MRR e composição do crescimento',
         columns: [
-          { key: 'mes_ano', label: 'Mês/Ano', type: 'date', required: true, description: 'Ex: 2024-01' },
-          { key: 'conta', label: 'Conta', type: 'select', required: true, description: 'Zov, Papaya, Mdias', options: ['Zov', 'Papaya', 'Mdias'] },
-          { key: 'receita_total', label: 'Receita Total (R$)', type: 'number', required: true, description: 'Faturamento bruto do mês' },
-          { key: 'custos_fixos', label: 'Custos Fixos (R$)', type: 'number', required: true, description: 'Aluguel, salários, etc.' },
-          { key: 'custos_variaveis', label: 'Custos Variáveis (R$)', type: 'number', required: true, description: 'Comissões, insumos, etc.' },
-          { key: 'impostos', label: 'Impostos (R$)', type: 'number', required: true, description: 'Tributos sobre receita' },
-          { key: 'numero_clientes', label: 'Nº Clientes Ativos', type: 'number', required: true, description: 'Total de clientes no mês' },
-          { key: 'numero_funcionarios', label: 'Nº Funcionários', type: 'number', required: true, description: 'Headcount do mês' },
-          { key: 'investimento_marketing', label: 'Investimento Marketing (R$)', type: 'number', required: true, description: 'Total gasto em marketing' },
+          { key: 'month', label: 'Mês', type: 'date', required: true, description: 'Ex: 2024-01' },
+          { key: 'mrr', label: 'MRR (R$)', type: 'number', required: true, description: 'Receita recorrente mensal total' },
+          { key: 'novos', label: 'Novos (R$)', type: 'number', required: true, description: 'MRR vindo de novos clientes no mês' },
+          { key: 'expansao', label: 'Expansão (R$)', type: 'number', required: true, description: 'Upsell/expansão em base existente' },
+          { key: 'churn', label: 'Churn (R$)', type: 'number', required: true, description: 'Perdas de MRR no mês (valor positivo)' },
         ],
         examples: [
-          { mes_ano: '2024-01', conta: 'Zov', receita_total: 150000, custos_fixos: 50000, custos_variaveis: 20000, impostos: 10000, numero_clientes: 45, numero_funcionarios: 12, investimento_marketing: 8000 },
-          { mes_ano: '2024-02', conta: 'Zov', receita_total: 165000, custos_fixos: 52000, custos_variaveis: 22000, impostos: 11000, numero_clientes: 48, numero_funcionarios: 13, investimento_marketing: 9500 },
+          { month: '2024-01', mrr: 1125000, novos: 85000, expansao: 42000, churn: 19000 },
+          { month: '2024-02', mrr: 1189000, novos: 92000, expansao: 51000, churn: 25000 },
+        ]
+      },
+      {
+        name: 'Produtividade',
+        description: 'Receita por colaborador / eficiência ao longo do tempo',
+        columns: [
+          { key: 'month', label: 'Mês', type: 'date', required: true, description: 'Ex: 2024-01' },
+          { key: 'receita', label: 'Receita Total (R$)', type: 'number', required: true, description: 'Receita do mês' },
+          { key: 'colaboradores', label: 'Colaboradores', type: 'number', required: true, description: 'Headcount do mês' },
+        ],
+        examples: [
+          { month: '2024-01', receita: 1125000, colaboradores: 100 },
+          { month: '2024-02', receita: 1189000, colaboradores: 102 },
         ]
       }
     ]
@@ -443,6 +452,7 @@ export const analyzeUploadedFile = async (file: File, templateId: string): Promi
   const template = smartTemplates[templateId];
   const warnings: string[] = [];
   let needsColumnMapping = false;
+  const isCsv = file.name.toLowerCase().endsWith('.csv');
 
   console.log('[analyzeUploadedFile] Starting analysis for template:', templateId);
 
@@ -462,7 +472,9 @@ export const analyzeUploadedFile = async (file: File, templateId: string): Promi
         console.log('[analyzeUploadedFile] Template sheets expected:', template?.sheets.map(s => s.name));
 
         // Validate: file must have at least as many sheets as the template requires
-        if (template && workbook.SheetNames.length < template.sheets.length) {
+        // CSV sempre vira 1 aba no XLSX.read() — para templates com múltiplas abas,
+        // permitimos importar 1 aba por vez (o usuário fará uploads adicionais).
+        if (!isCsv && template && workbook.SheetNames.length < template.sheets.length) {
           const missingCount = template.sheets.length - workbook.SheetNames.length;
           const expectedSheets = template.sheets.map(s => s.name).join(', ');
           reject(new Error(
@@ -470,6 +482,11 @@ export const analyzeUploadedFile = async (file: File, templateId: string): Promi
             `Por favor, envie um arquivo com todas as abas necessárias.`
           ));
           return;
+        }
+        if (isCsv && template && template.sheets.length > 1) {
+          warnings.push(
+            `Arquivo CSV possui apenas 1 aba. Para "${template.name}", importe as abas uma a uma (um CSV por aba) selecionando o destino antes de importar.`
+          );
         }
 
         const sheets = workbook.SheetNames.map((sheetName, sheetIndex) => {

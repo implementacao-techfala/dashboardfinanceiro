@@ -3,7 +3,7 @@ import { ExpandableChart } from "@/components/ExpandableChart";
 import { FilterBadges } from "@/components/FilterBadges";
 import { CustomTooltip } from "@/components/CustomTooltip";
 import { AccountSelector } from "@/components/AccountSelector";
-import DataUploader from "@/components/DataUploader";
+import PageDataActions from "@/components/PageDataActions";
 import { useData } from "@/contexts/DataContext";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -25,7 +25,10 @@ export default function Clients() {
   // Processar base de clientes mensal
   const baseClientesData = useMemo(() => {
     const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
-    const baseAtivos = clientesRaw.length || 1500;
+    const baseAtivos = clientesRaw.length;
+
+    // CRUD real: sem dados => sem gráfico (nada de estimativas)
+    if (baseAtivos === 0 && movimentacoesRaw.length === 0) return [];
     
     // Processar movimentações por mês
     const movByMonth: Record<string, { novos: number; perdidos: number }> = {};
@@ -45,16 +48,16 @@ export default function Clients() {
       }
     });
 
-    let acumulado = baseAtivos - 300; // Começar um pouco antes
+    let acumulado = Math.max(0, baseAtivos - 300); // Começar um pouco antes, sem ficar negativo
     return months.map((month) => {
-      const mov = movByMonth[month] || { novos: Math.floor(40 + Math.random() * 15), perdidos: Math.floor(4 + Math.random() * 6) };
+      const mov = movByMonth[month] || { novos: 0, perdidos: 0 };
       acumulado += mov.novos - mov.perdidos;
       return {
         month,
-        ativos: acumulado,
+        ativos: Math.max(0, acumulado),
         novos: mov.novos,
         perdidos: mov.perdidos,
-        reativados: Math.floor(Math.random() * 5) + 2
+        reativados: 0
       };
     });
   }, [clientesRaw, movimentacoesRaw, refreshKey]);
@@ -77,13 +80,7 @@ export default function Clients() {
       produtos: [] // Simplificado
     }));
 
-    return result.length > 0 ? result : [
-      { servico: "Contabilidade", clientes: 856, percentual: 55.5, produtos: [] },
-      { servico: "BPO Estratégico", clientes: 342, percentual: 22.2, produtos: [] },
-      { servico: "BPO RH", clientes: 289, percentual: 18.7, produtos: [] },
-      { servico: "ClickOn", clientes: 178, percentual: 11.5, produtos: [] },
-      { servico: "Certificado Digital", clientes: 445, percentual: 28.9, produtos: [] },
-    ];
+    return result;
   }, [clientesRaw, refreshKey]);
 
   // Processar regimes tributários
@@ -108,12 +105,7 @@ export default function Clients() {
       percentual: total > 0 ? Number(((data.clientes / total) * 100).toFixed(1)) : 0
     }));
 
-    return result.length > 0 ? result : [
-      { regime: "Simples Nacional", clientes: 892, faturamentoMedio: 180000, percentual: 57.8 },
-      { regime: "Lucro Presumido", clientes: 412, faturamentoMedio: 850000, percentual: 26.7 },
-      { regime: "Lucro Real", clientes: 156, faturamentoMedio: 4500000, percentual: 10.1 },
-      { regime: "MEI", clientes: 82, faturamentoMedio: 65000, percentual: 5.3 },
-    ];
+    return result;
   }, [clientesRaw, refreshKey]);
 
   // Calcular NPS
@@ -174,8 +166,8 @@ export default function Clients() {
 
   const clientesAtuais = baseClientesData[baseClientesData.length - 1]?.ativos || 0;
   const ultimoMes = baseClientesData[baseClientesData.length - 1];
-  const churnRate = clientesAtuais > 0 ? ((ultimoMes?.perdidos || 0) / clientesAtuais * 100).toFixed(2) : "0.67";
-  const npsAtual = npsData[npsData.length - 1]?.nps || 81;
+  const churnRate = clientesAtuais > 0 ? ((ultimoMes?.perdidos || 0) / clientesAtuais * 100).toFixed(2) : "0";
+  const npsAtual = npsData[npsData.length - 1]?.nps ?? 0;
 
   return (
     <div className="p-8 space-y-8 animate-fade-in">
@@ -185,7 +177,7 @@ export default function Clients() {
           <p className="text-muted-foreground">Análise completa da base de clientes</p>
         </div>
         <div className="flex items-center gap-3">
-          <DataUploader pageId="clients" onDataUpdated={() => setRefreshKey(k => k + 1)} />
+          <PageDataActions pageId="clients" onDataUpdated={() => setRefreshKey(k => k + 1)} />
           <AccountSelector />
         </div>
       </div>

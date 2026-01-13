@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/tooltip';
 import { useData } from '@/contexts/DataContext';
 import SmartUploadModal from './SmartUploadModal';
+import { toast } from "sonner";
 
 interface DataUploaderProps {
   pageId: string;
@@ -28,10 +29,13 @@ const googleSheetsLinks: Record<string, string | undefined> = {
 };
 
 const DataUploader: React.FC<DataUploaderProps> = ({ pageId, onDataUpdated }) => {
-  const { setData, getUploadInfo } = useData();
+  const { setData, getUploadInfo, getPageCompleteness } = useData();
   const [isOpen, setIsOpen] = useState(false);
-  
-  const uploadInfo = getUploadInfo(pageId);
+
+  const fullUploadInfo = getUploadInfo(pageId);
+  // Só mostra como "Carregado" se a fonte for arquivo (ou undefined/null, que assumimos como arquivo antigo)
+  const uploadInfo = fullUploadInfo?.dataSource === 'googlesheets' ? null : fullUploadInfo;
+
   const googleSheetLink = googleSheetsLinks[pageId];
 
   const formatDate = (date: Date) => {
@@ -49,6 +53,13 @@ const DataUploader: React.FC<DataUploaderProps> = ({ pageId, onDataUpdated }) =>
     try {
       await setData(pageId, data, fileName);
       console.log('[DataUploader] setData completed successfully');
+      const completeness = getPageCompleteness(pageId);
+      if (completeness.requiredSheets.length > 1 && completeness.missingSheets.length > 0) {
+        toast.warning(
+          `Importado. Ainda faltam abas: ${completeness.missingSheets.join(", ")}`,
+          { duration: 6000 }
+        );
+      }
       onDataUpdated?.();
     } catch (error) {
       console.error('[DataUploader] Error in setData:', error);
@@ -75,8 +86,14 @@ const DataUploader: React.FC<DataUploaderProps> = ({ pageId, onDataUpdated }) =>
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            {uploadInfo 
-              ? `Arquivo: ${uploadInfo.fileName} (${formatDate(uploadInfo.uploadedAt)})`
+            {uploadInfo
+              ? (() => {
+                const c = uploadInfo.completeness;
+                if (c && c.requiredSheets.length > 1 && c.missingSheets.length > 0) {
+                  return `Arquivo: ${uploadInfo.fileName} (${formatDate(uploadInfo.uploadedAt)}) • Faltam abas: ${c.missingSheets.join(", ")}`;
+                }
+                return `Arquivo: ${uploadInfo.fileName} (${formatDate(uploadInfo.uploadedAt)})`;
+              })()
               : 'Clique para importar planilha'
             }
           </TooltipContent>

@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { DollarSign, TrendingUp, TrendingDown, Activity, Info, AlertTriangle } from "lucide-react";
 import { ExpandableChart } from "@/components/ExpandableChart";
 import { FilterBadges } from "@/components/FilterBadges";
 import { CustomTooltip } from "@/components/CustomTooltip";
 import { AccountSelector } from "@/components/AccountSelector";
-import DataUploader from "@/components/DataUploader";
+import PageDataActions from "@/components/PageDataActions";
 import { useFilters } from "@/contexts/FilterContext";
 import { useData } from "@/contexts/DataContext";
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area, Legend } from "recharts";
@@ -17,42 +17,22 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-// KPI metrics configuration (static display config)
+const formatCurrencyShort = (value: number) => {
+  if (!Number.isFinite(value)) return "—";
+  if (value >= 1_000_000) return `R$ ${(value / 1_000_000).toFixed(3)}M`;
+  if (value >= 1_000) return `R$ ${(value / 1_000).toFixed(0)}K`;
+  return `R$ ${Math.round(value).toLocaleString("pt-BR")}`;
+};
 
-const kpiMetrics = [
-  { 
-    label: "MRR Atual", 
-    value: "R$ 1.125M", 
-    previous: "R$ 1.057M",
-    change: 6.4,
-    period: "+R$ 68K vs mês anterior",
-    tooltip: "MRR (Monthly Recurring Revenue) é a receita recorrente mensal. Métrica fundamental para negócios baseados em assinatura, mostra a previsibilidade de receita."
-  },
-  { 
-    label: "Churn Rate", 
-    value: "0.67%", 
-    previous: "0.95%",
-    change: -29.5,
-    period: "Meta: < 2% (✓ Atingido)",
-    tooltip: "Taxa de cancelamento de clientes. Quanto menor, melhor. Indica a capacidade de reter clientes e a qualidade do serviço prestado."
-  },
-  { 
-    label: "LTV/CAC Ratio", 
-    value: "4.37x", 
-    previous: "3.61x",
-    change: 21.1,
-    period: "Ideal: > 3.0x (✓ Saudável)",
-    tooltip: "Relação entre Lifetime Value (valor que o cliente gera) e Customer Acquisition Cost (custo para adquirir). Acima de 3x indica negócio saudável e escalável."
-  },
-  { 
-    label: "Receita/Colaborador", 
-    value: "R$ 11.250", 
-    previous: "R$ 10.570",
-    change: 6.4,
-    period: "100 colaboradores",
-    tooltip: "Produtividade da equipe medida pela receita gerada por cada colaborador. Quanto maior, mais eficiente a operação."
-  },
-];
+const formatCurrency = (value: number) => {
+  if (!Number.isFinite(value)) return "—";
+  return `R$ ${Math.round(value).toLocaleString("pt-BR")}`;
+};
+
+const formatPct = (value: number) => {
+  if (!Number.isFinite(value)) return "—";
+  return `${value.toFixed(2)}%`;
+};
 
 export default function Overview() {
   const { filters, setFilter } = useFilters();
@@ -93,7 +73,86 @@ export default function Overview() {
 
   const mrrAtual = mrrData[mrrData.length - 1]?.mrr || 0;
   const mrrAnterior = mrrData[mrrData.length - 2]?.mrr || 0;
-  const crescimentoMRR = mrrAnterior ? (((mrrAtual - mrrAnterior) / mrrAnterior) * 100).toFixed(1) : "0";
+  const crescimentoMRR = mrrAnterior ? (((mrrAtual - mrrAnterior) / mrrAnterior) * 100) : 0;
+
+  const churnAtual = mrrData[mrrData.length - 1]?.churn || 0;
+  const churnAnterior = mrrData[mrrData.length - 2]?.churn || 0;
+  const churnRateAtual = mrrAnterior > 0 ? (churnAtual / mrrAnterior) * 100 : NaN;
+  const churnRateAnterior = (mrrData[mrrData.length - 3]?.mrr || 0) > 0 ? (churnAnterior / (mrrData[mrrData.length - 3]?.mrr || 0)) * 100 : NaN;
+
+  const receitaAtual = receitaPorColaborador[receitaPorColaborador.length - 1]?.receita ?? NaN;
+  const receitaAnterior = receitaPorColaborador[receitaPorColaborador.length - 2]?.receita ?? NaN;
+  const receitaPorColabAtual = receitaPorColaboradorRaw[receitaPorColaboradorRaw.length - 1]?.colaboradores
+    ? receitaAtual / Number(receitaPorColaboradorRaw[receitaPorColaboradorRaw.length - 1]?.colaboradores)
+    : NaN;
+  const receitaPorColabAnterior = receitaPorColaboradorRaw[receitaPorColaboradorRaw.length - 2]?.colaboradores
+    ? receitaAnterior / Number(receitaPorColaboradorRaw[receitaPorColaboradorRaw.length - 2]?.colaboradores)
+    : NaN;
+  const crescimentoReceitaPorColab =
+    Number.isFinite(receitaPorColabAtual) && Number.isFinite(receitaPorColabAnterior) && receitaPorColabAnterior !== 0
+      ? ((receitaPorColabAtual - receitaPorColabAnterior) / receitaPorColabAnterior) * 100
+      : NaN;
+
+  const kpiMetrics = useMemo(() => {
+    const hasMRR = mrrData.length > 0;
+    const hasProd = receitaPorColaborador.length > 0;
+
+    return [
+      {
+        label: "MRR Atual",
+        value: hasMRR ? formatCurrencyShort(mrrAtual) : "—",
+        previous: hasMRR ? formatCurrencyShort(mrrAnterior) : "—",
+        change: hasMRR ? crescimentoMRR : NaN,
+        period: hasMRR ? `${formatCurrency(mrrAtual - mrrAnterior)} vs mês anterior` : "Sem dados carregados",
+        tooltip:
+          "MRR (Monthly Recurring Revenue) é a receita recorrente mensal. Mostra previsibilidade de receita em negócios de assinatura.",
+      },
+      {
+        label: "Churn (MRR)",
+        value: hasMRR ? formatPct(churnRateAtual) : "—",
+        previous: hasMRR ? formatPct(churnRateAnterior) : "—",
+        change:
+          Number.isFinite(churnRateAtual) && Number.isFinite(churnRateAnterior)
+            ? churnRateAnterior !== 0
+              ? ((churnRateAtual - churnRateAnterior) / churnRateAnterior) * 100
+              : NaN
+            : NaN,
+        period: hasMRR ? `Churn: ${formatCurrency(churnAtual)} no mês` : "Sem dados carregados",
+        tooltip:
+          "Churn de MRR estimado: churn do mês dividido pelo MRR do mês anterior (aproximação).",
+      },
+      {
+        label: "LTV/CAC Ratio",
+        value: "—",
+        previous: "—",
+        change: NaN,
+        period: "Defina LTV e CAC no modelo para calcular",
+        tooltip:
+          "Este KPI depende de dados de LTV e CAC, que não estão no template atual. Quando adicionarmos, ele passa a ser calculado.",
+      },
+      {
+        label: "Receita/Colaborador",
+        value: hasProd ? formatCurrency(Math.round(receitaPorColabAtual)) : "—",
+        previous: hasProd ? formatCurrency(Math.round(receitaPorColabAnterior)) : "—",
+        change: hasProd ? crescimentoReceitaPorColab : NaN,
+        period: hasProd ? "Derivado de Receita e Colaboradores" : "Sem dados carregados",
+        tooltip:
+          "Produtividade: receita do mês dividida pelo número de colaboradores do mês (aba Produtividade).",
+      },
+    ] as const;
+  }, [
+    mrrData.length,
+    receitaPorColaborador.length,
+    mrrAtual,
+    mrrAnterior,
+    churnAtual,
+    churnRateAtual,
+    churnRateAnterior,
+    crescimentoMRR,
+    receitaPorColabAtual,
+    receitaPorColabAnterior,
+    crescimentoReceitaPorColab,
+  ]);
 
   return (
     <div className="p-8 space-y-8 animate-fade-in">
@@ -103,7 +162,7 @@ export default function Overview() {
           <p className="text-muted-foreground">Dashboard do CEO - Principais indicadores do Grupo FN</p>
         </div>
         <div className="flex items-center gap-3">
-          <DataUploader pageId="overview" onDataUpdated={() => setRefreshKey(k => k + 1)} />
+          <PageDataActions pageId="overview" onDataUpdated={() => setRefreshKey(k => k + 1)} />
           <AccountSelector />
         </div>
       </div>
@@ -135,17 +194,23 @@ export default function Overview() {
               <p className="text-2xl font-bold text-foreground break-words">{metric.value}</p>
               <div
                 className={`flex items-center text-xs font-medium flex-shrink-0 ${
-                  metric.change >= 0 && !metric.label.includes("Churn") ? "text-success" : 
-                  metric.change < 0 && metric.label.includes("Churn") ? "text-success" :
-                  "text-destructive"
+                  Number.isFinite(metric.change)
+                    ? metric.change >= 0
+                      ? "text-success"
+                      : "text-destructive"
+                    : "text-muted-foreground"
                 }`}
               >
-                {metric.change >= 0 ? (
-                  <TrendingUp className="h-3 w-3 mr-1" />
+                {Number.isFinite(metric.change) ? (
+                  metric.change >= 0 ? (
+                    <TrendingUp className="h-3 w-3 mr-1" />
+                  ) : (
+                    <TrendingDown className="h-3 w-3 mr-1" />
+                  )
                 ) : (
-                  <TrendingDown className="h-3 w-3 mr-1" />
+                  <Activity className="h-3 w-3 mr-1" />
                 )}
-                {Math.abs(metric.change)}%
+                {Number.isFinite(metric.change) ? `${Math.abs(metric.change).toFixed(1)}%` : "—"}
               </div>
             </div>
             <p className="text-xs text-muted-foreground break-words">{metric.previous}</p>
@@ -239,44 +304,40 @@ export default function Overview() {
         </ExpandableChart>
 
         <Card className="p-6 gradient-card border-border shadow-soft">
-          <h3 className="text-lg font-semibold text-foreground mb-6">KPIs Críticos - Atenção!</h3>
-          <div className="space-y-4">
-            <div className="flex items-start gap-3 p-3 bg-success/10 rounded-lg border border-success/20">
-              <Activity className="h-5 w-5 text-success mt-0.5 flex-shrink-0" />
-              <div>
-                <p className="text-sm font-medium text-foreground">Churn Rate Saudável</p>
-                <p className="text-xs text-muted-foreground">0.67% - Abaixo da meta de 2%</p>
+          <h3 className="text-lg font-semibold text-foreground mb-6">KPIs Críticos</h3>
+          {mrrData.length === 0 && receitaPorColaborador.length === 0 ? (
+            <div className="text-sm text-muted-foreground">Sem dados carregados. Importe os CSVs de Overview para ver insights.</div>
+          ) : (
+            <div className="space-y-4">
+              <div className="flex items-start gap-3 p-3 bg-primary/10 rounded-lg border border-primary/20">
+                <Activity className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="text-sm font-medium text-foreground">Crescimento MRR</p>
+                  <p className="text-xs text-muted-foreground">
+                    {Number.isFinite(crescimentoMRR) ? `${crescimentoMRR.toFixed(1)}% MoM` : "—"}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 p-3 bg-warning/10 rounded-lg border border-warning/20">
+                <AlertTriangle className="h-5 w-5 text-warning mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="text-sm font-medium text-foreground">Churn (MRR)</p>
+                  <p className="text-xs text-muted-foreground">
+                    {Number.isFinite(churnRateAtual) ? `${churnRateAtual.toFixed(2)}%` : "—"} • {formatCurrency(churnAtual)} no mês
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 p-3 bg-success/10 rounded-lg border border-success/20">
+                <Activity className="h-5 w-5 text-success mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="text-sm font-medium text-foreground">Receita/Colaborador</p>
+                  <p className="text-xs text-muted-foreground">
+                    {Number.isFinite(receitaPorColabAtual) ? formatCurrency(Math.round(receitaPorColabAtual)) : "—"}
+                  </p>
+                </div>
               </div>
             </div>
-            <div className="flex items-start gap-3 p-3 bg-success/10 rounded-lg border border-success/20">
-              <Activity className="h-5 w-5 text-success mt-0.5 flex-shrink-0" />
-              <div>
-                <p className="text-sm font-medium text-foreground">LTV/CAC Excelente</p>
-                <p className="text-xs text-muted-foreground">4.37x - Muito acima do ideal (3.0x)</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3 p-3 bg-warning/10 rounded-lg border border-warning/20">
-              <AlertTriangle className="h-5 w-5 text-warning mt-0.5 flex-shrink-0" />
-              <div>
-                <p className="text-sm font-medium text-foreground">Inadimplência - Monitorar</p>
-                <p className="text-xs text-muted-foreground">3.2% (R$ 36K) - Meta: &lt; 3% - Leve atenção necessária para evitar aumento do índice</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3 p-3 bg-primary/10 rounded-lg border border-primary/20">
-              <Activity className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
-              <div>
-                <p className="text-sm font-medium text-foreground">Crescimento MRR</p>
-                <p className="text-xs text-muted-foreground">+6.4% MoM - Ritmo sustentável</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3 p-3 bg-success/10 rounded-lg border border-success/20">
-              <Activity className="h-5 w-5 text-success mt-0.5 flex-shrink-0" />
-              <div>
-                <p className="text-sm font-medium text-foreground">Base de Clientes</p>
-                <p className="text-xs text-muted-foreground">1.542 ativos - Meta: 1.500+ (✓)</p>
-              </div>
-            </div>
-          </div>
+          )}
         </Card>
       </div>
     </div>

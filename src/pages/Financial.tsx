@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { ExpandableChart } from "@/components/ExpandableChart";
 import { FilterBadges } from "@/components/FilterBadges";
 import { CustomTooltip } from "@/components/CustomTooltip";
-import DataUploader from "@/components/DataUploader";
+import PageDataActions from "@/components/PageDataActions";
 import { useFilters } from "@/contexts/FilterContext";
 import { useData } from "@/contexts/DataContext";
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
@@ -59,14 +59,7 @@ export default function Financial() {
       lucro: data.receitaBruta - data.impostos - data.custos - data.despesas
     }));
 
-    return result.length > 0 ? result : [
-      { month: 'Jan', receitaBruta: 450000, impostos: 60750, receitaLiquida: 389250, custos: 247425, despesas: 74178, lucro: 67647 },
-      { month: 'Fev', receitaBruta: 520000, impostos: 70200, receitaLiquida: 449800, custos: 269892, despesas: 89964, lucro: 89944 },
-      { month: 'Mar', receitaBruta: 480000, impostos: 64800, receitaLiquida: 415200, custos: 274032, despesas: 74952, lucro: 66216 },
-      { month: 'Abr', receitaBruta: 610000, impostos: 82350, receitaLiquida: 527650, custos: 316590, despesas: 105530, lucro: 105530 },
-      { month: 'Mai', receitaBruta: 550000, impostos: 74250, receitaLiquida: 475750, custos: 309988, despesas: 85748, lucro: 80014 },
-      { month: 'Jun', receitaBruta: 670000, impostos: 90450, receitaLiquida: 579550, custos: 347730, despesas: 115910, lucro: 115910 },
-    ];
+    return result;
   }, [lancamentosRaw, refreshKey]);
 
   // Calcular indicadores financeiros
@@ -110,7 +103,7 @@ export default function Financial() {
           <h1 className="text-4xl font-bold text-foreground mb-2">Financeiro & DRE</h1>
           <p className="text-muted-foreground">Demonstrativo de Resultado e análise contábil</p>
         </div>
-        <DataUploader pageId="financial" onDataUpdated={() => setRefreshKey(k => k + 1)} />
+        <PageDataActions pageId="financial" onDataUpdated={() => setRefreshKey(k => k + 1)} />
       </div>
 
       <FilterBadges />

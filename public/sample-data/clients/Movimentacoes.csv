@@ -1,0 +1,151 @@
+data,cliente,tipo,servico,valor_anterior,valor_novo,motivo
+2024-02-05,Tech Solutions,Upgrade,BPO RH,3137,5805,Aumento de escopo
+2024-01-15,Nova Empresa LTDA,Novo Cliente,Contabilidade,0,1448,Indicação
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,2197,0,Preço - concorrente mais barato
+2024-02-05,Tech Solutions,Upgrade,BPO RH,3670,4823,Aumento de escopo
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,2622,0,Preço - concorrente mais barato
+2024-01-15,Nova Empresa LTDA,Novo Cliente,Contabilidade,0,1163,Indicação
+2024-02-05,Tech Solutions,Upgrade,BPO RH,4365,5364,Aumento de escopo
+2024-02-05,Tech Solutions,Upgrade,BPO RH,4373,6217,Aumento de escopo
+2024-01-15,Nova Empresa LTDA,Novo Cliente,Contabilidade,0,2020,Indicação
+2024-02-05,Tech Solutions,Upgrade,BPO RH,3848,5832,Aumento de escopo
+2024-02-05,Tech Solutions,Upgrade,BPO RH,2795,6582,Aumento de escopo
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,2594,0,Preço - concorrente mais barato
+2024-02-05,Tech Solutions,Upgrade,BPO RH,3848,7240,Aumento de escopo
+2024-01-15,Nova Empresa LTDA,Novo Cliente,Contabilidade,0,1424,Indicação
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,2584,0,Preço - concorrente mais barato
+2024-01-15,Nova Empresa LTDA,Novo Cliente,Contabilidade,0,1604,Indicação
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,2247,0,Preço - concorrente mais barato
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,1637,0,Preço - concorrente mais barato
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,1992,0,Preço - concorrente mais barato
+2024-01-15,Nova Empresa LTDA,Novo Cliente,Contabilidade,0,1899,Indicação
+2024-02-05,Tech Solutions,Upgrade,BPO RH,3129,4759,Aumento de escopo
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,2455,0,Preço - concorrente mais barato
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,1861,0,Preço - concorrente mais barato
+2024-02-05,Tech Solutions,Upgrade,BPO RH,4172,6759,Aumento de escopo
+2024-02-05,Tech Solutions,Upgrade,BPO RH,3299,7304,Aumento de escopo
+2024-01-15,Nova Empresa LTDA,Novo Cliente,Contabilidade,0,1770,Indicação
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,1629,0,Preço - concorrente mais barato
+2024-01-15,Nova Empresa LTDA,Novo Cliente,Contabilidade,0,1512,Indicação
+2024-01-15,Nova Empresa LTDA,Novo Cliente,Contabilidade,0,1165,Indicação
+2024-01-15,Nova Empresa LTDA,Novo Cliente,Contabilidade,0,1925,Indicação
+2024-01-15,Nova Empresa LTDA,Novo Cliente,Contabilidade,0,1818,Indicação
+2024-02-05,Tech Solutions,Upgrade,BPO RH,3721,5924,Aumento de escopo
+2024-01-15,Nova Empresa LTDA,Novo Cliente,Contabilidade,0,1712,Indicação
+2024-02-05,Tech Solutions,Upgrade,BPO RH,2857,4167,Aumento de escopo
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,2449,0,Preço - concorrente mais barato
+2024-01-15,Nova Empresa LTDA,Novo Cliente,Contabilidade,0,1867,Indicação
+2024-01-15,Nova Empresa LTDA,Novo Cliente,Contabilidade,0,1200,Indicação
+2024-02-05,Tech Solutions,Upgrade,BPO RH,2892,6298,Aumento de escopo
+2024-02-05,Tech Solutions,Upgrade,BPO RH,4571,6790,Aumento de escopo
+2024-01-15,Nova Empresa LTDA,Novo Cliente,Contabilidade,0,1585,Indicação
+2024-02-05,Tech Solutions,Upgrade,BPO RH,3941,6295,Aumento de escopo
+2024-02-05,Tech Solutions,Upgrade,BPO RH,3161,5713,Aumento de escopo
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,2331,0,Preço - concorrente mais barato
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,2003,0,Preço - concorrente mais barato
+2024-02-05,Tech Solutions,Upgrade,BPO RH,4524,6137,Aumento de escopo
+2024-01-15,Nova Empresa LTDA,Novo Cliente,Contabilidade,0,1210,Indicação
+2024-02-05,Tech Solutions,Upgrade,BPO RH,4450,5914,Aumento de escopo
+2024-02-05,Tech Solutions,Upgrade,BPO RH,3890,5707,Aumento de escopo
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,1667,0,Preço - concorrente mais barato
+2024-01-15,Nova Empresa LTDA,Novo Cliente,Contabilidade,0,1287,Indicação
+2024-02-05,Tech Solutions,Upgrade,BPO RH,3725,6280,Aumento de escopo
+2024-01-15,Nova Empresa LTDA,Novo Cliente,Contabilidade,0,1931,Indicação
+2024-01-15,Nova Empresa LTDA,Novo Cliente,Contabilidade,0,1794,Indicação
+2024-02-05,Tech Solutions,Upgrade,BPO RH,4138,6799,Aumento de escopo
+2024-02-05,Tech Solutions,Upgrade,BPO RH,4256,5839,Aumento de escopo
+2024-02-05,Tech Solutions,Upgrade,BPO RH,3673,4156,Aumento de escopo
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,1527,0,Preço - concorrente mais barato
+2024-01-15,Nova Empresa LTDA,Novo Cliente,Contabilidade,0,1326,Indicação
+2024-02-05,Tech Solutions,Upgrade,BPO RH,3973,5840,Aumento de escopo
+2024-01-15,Nova Empresa LTDA,Novo Cliente,Contabilidade,0,1337,Indicação
+2024-01-15,Nova Empresa LTDA,Novo Cliente,Contabilidade,0,1198,Indicação
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,1738,0,Preço - concorrente mais barato
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,2483,0,Preço - concorrente mais barato
+2024-01-15,Nova Empresa LTDA,Novo Cliente,Contabilidade,0,1560,Indicação
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,2699,0,Preço - concorrente mais barato
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,1867,0,Preço - concorrente mais barato
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,2138,0,Preço - concorrente mais barato
+2024-02-05,Tech Solutions,Upgrade,BPO RH,4506,5162,Aumento de escopo
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,1743,0,Preço - concorrente mais barato
+2024-02-05,Tech Solutions,Upgrade,BPO RH,3433,5933,Aumento de escopo
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,2434,0,Preço - concorrente mais barato
+2024-02-05,Tech Solutions,Upgrade,BPO RH,4690,5655,Aumento de escopo
+2024-01-15,Nova Empresa LTDA,Novo Cliente,Contabilidade,0,1400,Indicação
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,1512,0,Preço - concorrente mais barato
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,2224,0,Preço - concorrente mais barato
+2024-02-05,Tech Solutions,Upgrade,BPO RH,3609,4429,Aumento de escopo
+2024-02-05,Tech Solutions,Upgrade,BPO RH,3750,4362,Aumento de escopo
+2024-01-15,Nova Empresa LTDA,Novo Cliente,Contabilidade,0,1146,Indicação
+2024-01-15,Nova Empresa LTDA,Novo Cliente,Contabilidade,0,1668,Indicação
+2024-02-05,Tech Solutions,Upgrade,BPO RH,3643,5316,Aumento de escopo
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,2063,0,Preço - concorrente mais barato
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,2634,0,Preço - concorrente mais barato
+2024-02-05,Tech Solutions,Upgrade,BPO RH,3247,4994,Aumento de escopo
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,2365,0,Preço - concorrente mais barato
+2024-02-05,Tech Solutions,Upgrade,BPO RH,3190,4629,Aumento de escopo
+2024-02-05,Tech Solutions,Upgrade,BPO RH,3643,4318,Aumento de escopo
+2024-01-15,Nova Empresa LTDA,Novo Cliente,Contabilidade,0,1261,Indicação
+2024-02-05,Tech Solutions,Upgrade,BPO RH,4007,5504,Aumento de escopo
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,1750,0,Preço - concorrente mais barato
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,2114,0,Preço - concorrente mais barato
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,2103,0,Preço - concorrente mais barato
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,1554,0,Preço - concorrente mais barato
+2024-02-05,Tech Solutions,Upgrade,BPO RH,2654,5959,Aumento de escopo
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,2354,0,Preço - concorrente mais barato
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,2179,0,Preço - concorrente mais barato
+2024-01-15,Nova Empresa LTDA,Novo Cliente,Contabilidade,0,1129,Indicação
+2024-01-15,Nova Empresa LTDA,Novo Cliente,Contabilidade,0,1786,Indicação
+2024-01-15,Nova Empresa LTDA,Novo Cliente,Contabilidade,0,1896,Indicação
+2024-02-05,Tech Solutions,Upgrade,BPO RH,3246,6444,Aumento de escopo
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,2330,0,Preço - concorrente mais barato
+2024-01-15,Nova Empresa LTDA,Novo Cliente,Contabilidade,0,1932,Indicação
+2024-01-15,Nova Empresa LTDA,Novo Cliente,Contabilidade,0,1297,Indicação
+2024-01-15,Nova Empresa LTDA,Novo Cliente,Contabilidade,0,1604,Indicação
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,1711,0,Preço - concorrente mais barato
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,1738,0,Preço - concorrente mais barato
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,2340,0,Preço - concorrente mais barato
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,2676,0,Preço - concorrente mais barato
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,2058,0,Preço - concorrente mais barato
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,1924,0,Preço - concorrente mais barato
+2024-02-05,Tech Solutions,Upgrade,BPO RH,4337,5553,Aumento de escopo
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,1651,0,Preço - concorrente mais barato
+2024-01-15,Nova Empresa LTDA,Novo Cliente,Contabilidade,0,1877,Indicação
+2024-02-05,Tech Solutions,Upgrade,BPO RH,4627,6276,Aumento de escopo
+2024-02-05,Tech Solutions,Upgrade,BPO RH,3086,5019,Aumento de escopo
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,2032,0,Preço - concorrente mais barato
+2024-01-15,Nova Empresa LTDA,Novo Cliente,Contabilidade,0,2019,Indicação
+2024-02-05,Tech Solutions,Upgrade,BPO RH,3228,6678,Aumento de escopo
+2024-02-05,Tech Solutions,Upgrade,BPO RH,3372,5421,Aumento de escopo
+2024-01-15,Nova Empresa LTDA,Novo Cliente,Contabilidade,0,1697,Indicação
+2024-01-15,Nova Empresa LTDA,Novo Cliente,Contabilidade,0,1559,Indicação
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,2162,0,Preço - concorrente mais barato
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,1896,0,Preço - concorrente mais barato
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,2497,0,Preço - concorrente mais barato
+2024-01-15,Nova Empresa LTDA,Novo Cliente,Contabilidade,0,1799,Indicação
+2024-02-05,Tech Solutions,Upgrade,BPO RH,4654,6847,Aumento de escopo
+2024-02-05,Tech Solutions,Upgrade,BPO RH,3130,6519,Aumento de escopo
+2024-01-15,Nova Empresa LTDA,Novo Cliente,Contabilidade,0,1163,Indicação
+2024-02-05,Tech Solutions,Upgrade,BPO RH,4231,4922,Aumento de escopo
+2024-01-15,Nova Empresa LTDA,Novo Cliente,Contabilidade,0,1716,Indicação
+2024-02-05,Tech Solutions,Upgrade,BPO RH,2696,5485,Aumento de escopo
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,2130,0,Preço - concorrente mais barato
+2024-02-05,Tech Solutions,Upgrade,BPO RH,3017,5835,Aumento de escopo
+2024-02-05,Tech Solutions,Upgrade,BPO RH,3244,6531,Aumento de escopo
+2024-02-05,Tech Solutions,Upgrade,BPO RH,4351,6260,Aumento de escopo
+2024-01-15,Nova Empresa LTDA,Novo Cliente,Contabilidade,0,1823,Indicação
+2024-02-05,Tech Solutions,Upgrade,BPO RH,4508,5700,Aumento de escopo
+2024-02-05,Tech Solutions,Upgrade,BPO RH,4148,6662,Aumento de escopo
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,2484,0,Preço - concorrente mais barato
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,2029,0,Preço - concorrente mais barato
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,1896,0,Preço - concorrente mais barato
+2024-02-05,Tech Solutions,Upgrade,BPO RH,2761,4279,Aumento de escopo
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,1904,0,Preço - concorrente mais barato
+2024-02-05,Tech Solutions,Upgrade,BPO RH,4273,5626,Aumento de escopo
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,1621,0,Preço - concorrente mais barato
+2024-01-15,Nova Empresa LTDA,Novo Cliente,Contabilidade,0,1943,Indicação
+2024-02-05,Tech Solutions,Upgrade,BPO RH,3623,7321,Aumento de escopo
+2024-01-15,Nova Empresa LTDA,Novo Cliente,Contabilidade,0,1418,Indicação
+2024-01-15,Nova Empresa LTDA,Novo Cliente,Contabilidade,0,1716,Indicação
+2024-01-28,Antiga Corp,Churn,BPO Financeiro,1898,0,Preço - concorrente mais barato
+2024-01-15,Nova Empresa LTDA,Novo Cliente,Contabilidade,0,1495,Indicação

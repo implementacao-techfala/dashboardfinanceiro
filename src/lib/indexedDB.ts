@@ -9,6 +9,7 @@ export interface PageData {
   data: any; // Can be any[] or Record<string, any[]>
   uploadedAt: Date;
   fileName: string;
+  dataSource?: 'file' | 'googlesheets'; // Fonte dos dados
 }
 
 let dbInstance: IDBDatabase | null = null;
@@ -37,7 +38,7 @@ export const initDB = (): Promise<IDBDatabase> => {
   });
 };
 
-export const savePageData = async (pageId: string, data: any, fileName: string): Promise<void> => {
+export const savePageData = async (pageId: string, data: any, fileName: string, dataSource?: 'file' | 'googlesheets'): Promise<void> => {
   const db = await initDB();
   return new Promise((resolve, reject) => {
     const transaction = db.transaction([STORE_NAME], 'readwrite');
@@ -47,7 +48,8 @@ export const savePageData = async (pageId: string, data: any, fileName: string):
       pageId,
       data,
       uploadedAt: new Date(),
-      fileName
+      fileName,
+      dataSource
     };
 
     console.log('[IndexedDB] Saving data:', { pageId, fileName, dataKeys: typeof data === 'object' ? Object.keys(data) : 'array' });

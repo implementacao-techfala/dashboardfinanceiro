@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { ExpandableChart } from "@/components/ExpandableChart";
 import { Card } from "@/components/ui/card";
 import { CustomTooltip } from "@/components/CustomTooltip";
-import DataUploader from "@/components/DataUploader";
+import PageDataActions from "@/components/PageDataActions";
 import { useData } from "@/contexts/DataContext";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, LineChart, Line, Cell } from "recharts";
 import { Package, TrendingUp, DollarSign, Percent } from "lucide-react";
@@ -37,29 +37,44 @@ export default function Services() {
       clientes: data.clientes
     }));
 
-    return result.length > 0 ? result : [
-      { servico: "Contabilidade Consultiva", receita: 475200, custo: 342144, lucro: 133056, margem: 28.0, clientes: 856 },
-      { servico: "BPO Estratégico", receita: 119600, custo: 77740, lucro: 41860, margem: 35.0, clientes: 342 },
-      { servico: "BPO RH", receita: 92480, custo: 62886, lucro: 29594, margem: 32.0, clientes: 289 },
-      { servico: "BPO Financeiro", receita: 78400, custo: 51184, lucro: 27216, margem: 34.7, clientes: 198 },
-      { servico: "ClickOn Treinamentos", receita: 53400, custo: 30972, lucro: 22428, margem: 42.0, clientes: 178 },
-      { servico: "Tributação e Legalização", receita: 89200, custo: 58348, lucro: 30852, margem: 34.6, clientes: 267 },
-      { servico: "Certificado Digital", receita: 44600, custo: 36568, lucro: 8032, margem: 18.0, clientes: 445 },
-      { servico: "FN EUA", receita: 92400, custo: 58344, lucro: 34056, margem: 36.9, clientes: 67 },
-    ];
+    return result;
   }, [servicosRaw, refreshKey]);
 
-  // Evolução da margem (simulado por mês)
+  // Evolução da margem por mês (derivada do upload)
   const evolucaoMargem = useMemo(() => {
-    const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
-    return months.map((month, i) => ({
-      month,
-      consultiva: 27.5 + (i * 0.1),
-      bpo: 33.8 + (i * 0.2),
-      clickon: 40.2 + (i * 0.3),
-      certificado: 17.5 + (i * 0.1)
-    }));
-  }, []);
+    const monthly: Record<string, Record<string, { receita: number; custo: number }>> = {};
+    servicosRaw.forEach((row: any) => {
+      const date = new Date(row.mes);
+      const monthKey = date.toLocaleDateString('pt-BR', { month: 'short' }).replace('.', '');
+      const month = monthKey.charAt(0).toUpperCase() + monthKey.slice(1);
+      const servico = row.servico || 'Outros';
+      if (!monthly[month]) monthly[month] = {};
+      if (!monthly[month][servico]) monthly[month][servico] = { receita: 0, custo: 0 };
+      monthly[month][servico].receita += Number(row.receita) || 0;
+      monthly[month][servico].custo += (Number(row.custo_pessoal) || 0) + (Number(row.custo_operacional) || 0);
+    });
+
+    const months = Object.keys(monthly);
+    if (months.length === 0) return [];
+
+    // Pega até 4 serviços mais relevantes pela receita total no período
+    const totals: Record<string, number> = {};
+    months.forEach(m => {
+      Object.entries(monthly[m]).forEach(([s, v]) => {
+        totals[s] = (totals[s] || 0) + v.receita;
+      });
+    });
+    const top = Object.entries(totals).sort((a, b) => b[1] - a[1]).slice(0, 4).map(([s]) => s);
+
+    return months.map((m) => {
+      const out: any = { month: m };
+      top.forEach((s) => {
+        const v = monthly[m][s] || { receita: 0, custo: 0 };
+        out[s] = v.receita > 0 ? Number((((v.receita - v.custo) / v.receita) * 100).toFixed(1)) : 0;
+      });
+      return out;
+    });
+  }, [servicosRaw, refreshKey]);
 
   const receitaTotal = margemPorServico.reduce((acc, curr) => acc + curr.receita, 0);
   const lucroTotal = margemPorServico.reduce((acc, curr) => acc + curr.lucro, 0);
@@ -80,7 +95,7 @@ export default function Services() {
           <h1 className="text-4xl font-bold text-foreground mb-2">Margem por Serviço</h1>
           <p className="text-muted-foreground">Análise de lucratividade por linha de serviço</p>
         </div>
-        <DataUploader pageId="services" onDataUpdated={() => setRefreshKey(k => k + 1)} />
+        <PageDataActions pageId="services" onDataUpdated={() => setRefreshKey(k => k + 1)} />
       </div>
 
       {/* KPIs */}
