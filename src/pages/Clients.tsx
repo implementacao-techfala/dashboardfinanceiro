@@ -29,18 +29,18 @@ export default function Clients() {
 
     // CRUD real: sem dados => sem gráfico (nada de estimativas)
     if (baseAtivos === 0 && movimentacoesRaw.length === 0) return [];
-    
+
     // Processar movimentações por mês
     const movByMonth: Record<string, { novos: number; perdidos: number }> = {};
     movimentacoesRaw.forEach((mov: any) => {
       const date = new Date(mov.data);
       const monthKey = date.toLocaleDateString('pt-BR', { month: 'short' }).replace('.', '');
       const month = monthKey.charAt(0).toUpperCase() + monthKey.slice(1);
-      
+
       if (!movByMonth[month]) {
         movByMonth[month] = { novos: 0, perdidos: 0 };
       }
-      
+
       if (mov.tipo === 'Novo Cliente') {
         movByMonth[month].novos++;
       } else if (mov.tipo === 'Churn') {
@@ -65,7 +65,7 @@ export default function Clients() {
   // Processar clientes por serviço
   const clientesPorServico = useMemo(() => {
     const byServico: Record<string, number> = {};
-    
+
     clientesRaw.forEach((cli: any) => {
       const servico = cli.servico_principal || 'Outros';
       byServico[servico] = (byServico[servico] || 0) + 1;
@@ -86,7 +86,7 @@ export default function Clients() {
   // Processar regimes tributários
   const regimesTributarios = useMemo(() => {
     const byRegime: Record<string, { clientes: number; faturamento: number }> = {};
-    
+
     clientesRaw.forEach((cli: any) => {
       const regime = cli.regime || 'Outros';
       if (!byRegime[regime]) {
@@ -112,7 +112,7 @@ export default function Clients() {
   const npsData = useMemo(() => {
     let totalNps = 0;
     let count = 0;
-    
+
     clientesRaw.forEach((cli: any) => {
       const nps = Number(cli.nps);
       if (!isNaN(nps) && nps > 0) {
@@ -132,7 +132,7 @@ export default function Clients() {
   // Multi-serviços
   const multiServicos = useMemo(() => {
     const counts = { '1': 0, '2': 0, '3+': 0 };
-    
+
     clientesRaw.forEach((cli: any) => {
       const adicionais = (cli.servicos_adicionais || '').split(',').filter((s: string) => s.trim() && s.trim() !== 'N/A').length;
       const total = 1 + adicionais;
@@ -142,7 +142,7 @@ export default function Clients() {
     });
 
     const total = counts['1'] + counts['2'] + counts['3+'];
-    
+
     if (total === 0) {
       return [
         { name: "1 Serviço", value: 687, percentual: 44.5 },
@@ -159,12 +159,13 @@ export default function Clients() {
   }, [clientesRaw, refreshKey]);
 
   const toggleServico = (servico: string) => {
-    setExpandedServicos(prev => 
+    setExpandedServicos(prev =>
       prev.includes(servico) ? prev.filter(s => s !== servico) : [...prev, servico]
     );
   };
 
-  const clientesAtuais = baseClientesData[baseClientesData.length - 1]?.ativos || 0;
+  // Correção: Clientes ativos agora contam diretamente da lista de clientes cadastrados, que é a fonte da verdade
+  const clientesAtuais = clientesRaw.length;
   const ultimoMes = baseClientesData[baseClientesData.length - 1];
   const churnRate = clientesAtuais > 0 ? ((ultimoMes?.perdidos || 0) / clientesAtuais * 100).toFixed(2) : "0";
   const npsAtual = npsData[npsData.length - 1]?.nps ?? 0;
@@ -225,7 +226,7 @@ export default function Clients() {
 
       {/* Gráficos */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <ExpandableChart 
+        <ExpandableChart
           title="Evolução da Base de Clientes"
           description="Acompanha o crescimento total de clientes ativos ao longo do tempo."
         >
@@ -240,7 +241,7 @@ export default function Clients() {
           </ResponsiveContainer>
         </ExpandableChart>
 
-        <ExpandableChart 
+        <ExpandableChart
           title="Movimentação Mensal de Clientes"
           description="Novos clientes conquistados vs perdas (churn)."
         >
@@ -278,7 +279,7 @@ export default function Clients() {
           </div>
         </Card>
 
-        <ExpandableChart 
+        <ExpandableChart
           title="Cross-sell: Clientes com Múltiplos Serviços"
           description="Quantos serviços cada cliente contrata em média."
         >
@@ -295,7 +296,7 @@ export default function Clients() {
           </ResponsiveContainer>
         </ExpandableChart>
 
-        <ExpandableChart 
+        <ExpandableChart
           title="Evolução do NPS"
           description="Net Promoter Score - satisfação e lealdade dos clientes."
         >
