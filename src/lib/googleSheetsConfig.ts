@@ -1,7 +1,19 @@
 // Configuração centralizada para Google Sheets
-// Prioridade: localStorage (admin) > variáveis de ambiente (.env)
+// Prioridade: localStorage (admin) > variáveis de ambiente (.env) > Hardcoded (padrão)
 
 import { getStoredApiKey, getStoredSheetId } from './googleSheetsStorage';
+
+// IDs fixos (hardcoded) para garantir acesso padrão em qualquer dispositivo
+const DEFAULT_SHEET_IDS: Record<string, string> = {
+  overview: '1Vr3UpTc_VkEvRKiRX1ChbFtgJJFSNNOCrlOIKG5sR9c',
+  sales: '15Qb42HcCXGuZShpK9dgc_Ogx4GvfpsEN7q9XmgB1oSA',
+  financial: '1wp9ylq46MVYsPih7om_ABbViEH9-nhe8tHgCFCkP6g0',
+  hr: '1f8Tc3lLwnmmMfr5QL96yC1FOnAlG6cIJWmpK2tPkyyU',
+  marketing: '1aIHck8csU5g5xCqbQo6aBBo3SDVXUAQvF7n23le41gE',
+  clients: '1BxOLHSC7xd_H58pGtZVzw1DILB6n085ePxmrVZ74c5g',
+  services: '1xh_VOPYZZigvGym-H4gsIrgN4iAtFFT0CH3Xsl_4TjA',
+  cashflow: '1sxXyse9q5cSyVxOP0uJW3vTH7VZxCsr2u9ecQngqMdM'
+};
 
 /**
  * Retorna o Google Sheet ID para uma página específica
@@ -19,7 +31,12 @@ export const getGoogleSheetId = (pageId: string): string | null => {
   const env = import.meta.env as Record<string, string | undefined>;
   const envKey = `VITE_GOOGLE_SHEETS_${pageId.toUpperCase()}_ID`;
   const sheetId = env[envKey];
-  return sheetId && sheetId.length > 0 ? sheetId : null;
+  if (sheetId && sheetId.length > 0) {
+    return sheetId;
+  }
+
+  // Prioridade 3: Default Hardcoded (Padrão do sistema)
+  return DEFAULT_SHEET_IDS[pageId] || null;
 };
 
 /**
