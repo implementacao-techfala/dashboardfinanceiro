@@ -26,6 +26,12 @@ export const initDB = (): Promise<IDBDatabase> => {
     request.onerror = () => reject(request.error);
     request.onsuccess = () => {
       dbInstance = request.result;
+
+      dbInstance.onclose = () => {
+        console.warn('[IndexedDB] Conexão fechada. Limpando instância...');
+        dbInstance = null;
+      };
+
       resolve(dbInstance);
     };
 
@@ -38,66 +44,108 @@ export const initDB = (): Promise<IDBDatabase> => {
   });
 };
 
+// Retry wrapper para lidar com conexões fechadas
+const runWithRetry = async <T>(operation: (db: IDBDatabase) => Promise<T>): Promise<T> => {
+  try {
+    const db = await initDB();
+    return await operation(db);
+  } catch (error: any) {
+    const errorMsg = error?.message || '';
+    // Verifica erros relacionados a conexão fechada
+    if (
+      errorMsg.includes('closing') ||
+      error.name === 'InvalidStateError' ||
+      errorMsg.includes('transaction')
+    ) {
+      console.warn('[IndexedDB] Erro de conexão detectado. Tentando recuperar...', error);
+      dbInstance = null; // Força recriar conexão
+      const db = await initDB();
+      return await operation(db);
+    }
+    throw error;
+  }
+};
+
 export const savePageData = async (pageId: string, data: any, fileName: string, dataSource?: 'file' | 'googlesheets'): Promise<void> => {
-  const db = await initDB();
-  return new Promise((resolve, reject) => {
-    const transaction = db.transaction([STORE_NAME], 'readwrite');
-    const store = transaction.objectStore(STORE_NAME);
-    
-    const pageData: PageData = {
-      pageId,
-      data,
-      uploadedAt: new Date(),
-      fileName,
-      dataSource
-    };
+  return runWithRetry(async (db) => {
+    return new Promise((resolve, reject) => {
+      try {
+        const transaction = db.transaction([STORE_NAME], 'readwrite');
+        const store = transaction.objectStore(STORE_NAME);
 
-    console.log('[IndexedDB] Saving data:', { pageId, fileName, dataKeys: typeof data === 'object' ? Object.keys(data) : 'array' });
+        const pageData: PageData = {
+          pageId,
+          data,
+          uploadedAt: new Date(),
+          fileName,
+          dataSource
+        };
 
-    const request = store.put(pageData);
-    request.onerror = () => {
-      console.error('[IndexedDB] Error saving:', request.error);
-      reject(request.error);
-    };
-    request.onsuccess = () => {
-      console.log('[IndexedDB] Data saved successfully for', pageId);
-      resolve();
-    };
+        console.log('[IndexedDB] Saving data:', { pageId, fileName });
+
+        const request = store.put(pageData);
+        request.onerror = () => {
+          console.error('[IndexedDB] Error saving:', request.error);
+          reject(request.error);
+        };
+        request.onsuccess = () => {
+          console.log('[IndexedDB] Data saved successfully for', pageId);
+          resolve();
+        };
+      } catch (e) {
+        reject(e); // Captura erro síncrono na criação da transação
+      }
+    });
   });
 };
 
 export const getPageData = async (pageId: string): Promise<PageData | null> => {
-  const db = await initDB();
-  return new Promise((resolve, reject) => {
-    const transaction = db.transaction([STORE_NAME], 'readonly');
-    const store = transaction.objectStore(STORE_NAME);
-    const request = store.get(pageId);
+  return runWithRetry(async (db) => {
+    return new Promise((resolve, reject) => {
+      try {
+        const transaction = db.transaction([STORE_NAME], 'readonly');
+        const store = transaction.objectStore(STORE_NAME);
+        const request = store.get(pageId);
 
-    request.onerror = () => reject(request.error);
-    request.onsuccess = () => resolve(request.result || null);
+        request.onerror = () => reject(request.error);
+        request.onsuccess = () => resolve(request.result || null);
+      } catch (e) {
+        reject(e);
+      }
+    });
   });
 };
 
 export const deletePageData = async (pageId: string): Promise<void> => {
-  const db = await initDB();
-  return new Promise((resolve, reject) => {
-    const transaction = db.transaction([STORE_NAME], 'readwrite');
-    const store = transaction.objectStore(STORE_NAME);
-    const request = store.delete(pageId);
+  return runWithRetry(async (db) => {
+    return new Promise((resolve, reject) => {
+      try {
+        const transaction = db.transaction([STORE_NAME], 'readwrite');
+        const store = transaction.objectStore(STORE_NAME);
+        const request = store.delete(pageId);
 
-    request.onerror = () => reject(request.error);
-    request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+        request.onsuccess = () => resolve();
+      } catch (e) {
+        reject(e);
+      }
+    });
   });
 };
 
 export const getAllPageData = async (): Promise<PageData[]> => {
-  const db = await initDB();
-  return new Promise((resolve, reject) => {
-    const transaction = db.transaction([STORE_NAME], 'readonly');
-    const store = transaction.objectStore(STORE_NAME);
-    const request = store.getAll();
+  return runWithRetry(async (db) => {
+    return new Promise((resolve, reject) => {
+      try {
+        const transaction = db.transaction([STORE_NAME], 'readonly');
+        const store = transaction.objectStore(STORE_NAME);
+        const request = store.getAll();
 
-    request.onerror = () => reject(request.error);
-    request.onsuccess = () => resolve(request.result || []);
+        request.onerror = () => reject(request.error);
+        request.onsuccess = () => resolve(request.result || []);
+      } catch (e) {
+        reject(e);
+      }
+    });
   });
 };
